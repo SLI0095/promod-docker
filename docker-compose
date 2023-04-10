@@ -1,0 +1,36 @@
+version: "3.9"
+services:
+    mysql:
+        image: mysql:5.7.19
+        container_name: mysql
+        volumes:
+            - /home/docker/volumes/myapp/mysql/:/var/lib/mysql/
+        environment:
+            - MYSQL_USER=spring
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+            - MYSQL_DATABASE=promod
+        command: mysqld --lower_case_table_names=1 --skip-ssl --character_set_server=utf8
+
+    promod-spring:
+        image: mycompany/myapp:1.0.0
+        container_name: promod-spring
+        depends_on:
+        - mysql
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/promod?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Prague
+            -SPRING_JPA_HIBERNATE_DDL_AUTO=update
+            -SPRING_DATASOURCE.USERNAME=spring
+            -PROMOD_CORS_ALLOWED_ORIGINS=http://promod-web:3000/
+        ports:
+            - 8080:8080
+
+        
+    promod-web:
+        build:
+            context: nginx
+            dockerfile: Dockerfile
+            args:
+                LANDING_PAGE_DOMAIN: ${LANDING_PAGE_DOMAIN}
+        container_name: promod-web
+        ports:
+            - 3000:3000
