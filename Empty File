@@ -1,0 +1,2 @@
+        volumes:
+            - ./promod-mysql/:/var/lib/mysql/

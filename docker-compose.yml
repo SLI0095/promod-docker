@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+    promod-mysql:
+        image: mysql
+        container_name: promod-mysql
+        environment:
+            - MYSQL_USER=spring
+            - MYSQL_PASSWORD=spring
+            - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+            - MYSQL_DATABASE=promod
+        volumes:
+            - ./promod-mysql/:/docker-entrypoint-initdb.d/:ro
+        healthcheck:
+            test: ["CMD-SHELL", 'mysqladmin ping']
+            interval: 10s
+            timeout: 2s
+            retries: 10
+
+    promod-spring:
+        build: ./promod-spring
+        container_name: promod-spring
+        depends_on:
+            promod-mysql:
+               condition: service_healthy
+        links:
+        - promod-mysql
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:mysql://promod-mysql:3306/promod?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Prague
+            - SPRING_DATASOURCE_USERNAME=spring
+            - SPRING_DATASOURCE_PASSWORD=spring
+        ports:
+            - 8080:8080
