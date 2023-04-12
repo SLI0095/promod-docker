@@ -76,6 +76,7 @@ export default function ProjectDetail() {
   };
 
   const getDeleteButton = () => {
+    // eslint-disable-next-line eqeqeq
     if (project.projectOwner != null && project.projectOwner.id == userId) {
       return <DeleteProjectModal />;
     }

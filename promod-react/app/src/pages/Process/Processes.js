@@ -38,7 +38,7 @@ export default function Processes() {
           alert("Could not load data.");
         }
       );
-  }, [userId]);
+  }, [userId, projectId]);
 
   function loadRequiredData(nonTemplates, templates) {
     if (templates && nonTemplates) {

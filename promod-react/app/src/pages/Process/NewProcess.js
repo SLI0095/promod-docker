@@ -28,6 +28,7 @@ export default function NewProcess() {
 
   const saveProcess = () => {
     let process;
+    // eslint-disable-next-line eqeqeq
     if (projectId == -1) {
       process = {
         name: name.current.value,

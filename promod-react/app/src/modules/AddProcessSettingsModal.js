@@ -124,7 +124,7 @@ export default function AddProcessSettingsModal(props) {
           alert(error);
         }
       );
-  }, [userId]);
+  }, [userId, projectId]);
 
   return (
     <>

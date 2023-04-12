@@ -24,6 +24,7 @@ export default function Configurations(props) {
   };
 
   const checkProjectAccess = (projectId, projectName, configId) => {
+    // eslint-disable-next-line eqeqeq
     if (projectId == -1) {
       switchToSelectedProject(-1, "DEFAULT");
       navigateToListing(props.type);

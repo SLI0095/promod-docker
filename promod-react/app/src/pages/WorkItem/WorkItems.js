@@ -38,7 +38,7 @@ export default function WorkItems() {
           alert("Could not load data.");
         }
       );
-  }, [userId]);
+  }, [userId, projectId]);
 
   function loadRequiredData(nonTemplates, templates) {
     if (templates && nonTemplates) {

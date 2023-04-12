@@ -100,7 +100,7 @@ export default function AddTaskSettingsModal(props) {
           alert(error);
         }
       );
-  }, [userId]);
+  }, [userId, projectId]);
 
   return (
     <>

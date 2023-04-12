@@ -369,6 +369,7 @@ export default function ElementSettings(props) {
     }
   }
   const getChangeOwnerButton = () => {
+    // eslint-disable-next-line eqeqeq
     if (item.owner != null && item.owner.id == userId) {
       return <ChangeOwnerModal type={props.type} itemId={item.id} />;
     }
@@ -376,6 +377,7 @@ export default function ElementSettings(props) {
   };
 
   function getUsersPart() {
+    // eslint-disable-next-line eqeqeq
     if (projectId == -1) {
       return (
         <>
