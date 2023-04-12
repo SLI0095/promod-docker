@@ -22,11 +22,19 @@ services:
         depends_on:
             promod-mysql:
                condition: service_healthy
-        links:
-        - promod-mysql
         environment:
             - SPRING_DATASOURCE_URL=jdbc:mysql://promod-mysql:3306/promod?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Prague
             - SPRING_DATASOURCE_USERNAME=spring
             - SPRING_DATASOURCE_PASSWORD=spring
         ports:
             - 8080:8080
+            
+    promod-react:
+        build: ./promod-react
+        container_name: promod-react
+        depends_on:
+            - promod-spring
+        environment:
+            - PROMOD_SERVER_BASE_URL=http://promod-spring:8080/
+        ports:
+            - 3000:80
