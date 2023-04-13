@@ -11,6 +11,7 @@ RUN npm install && npm run build
 FROM nginx:1.23
 ENV JSFOLDER=/usr/share/nginx/html/static/js/*.js
 COPY ./start-nginx.sh /usr/bin/start-nginx.sh
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 RUN chmod +x /usr/bin/start-nginx.sh
 WORKDIR /usr/share/nginx/html
 COPY --from=0 /app/build .

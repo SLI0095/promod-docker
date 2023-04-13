@@ -35,6 +35,7 @@ services:
         depends_on:
             - promod-spring
         environment:
-            - PROMOD_SERVER_BASE_URL=http://promod-spring:8080/
+            serverURL:
+                http://localhost:8080/
         ports:
             - 3000:80
