@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import MyAppBar from "../../modules/MyAppBar";
-import {
-  Alert,
-  Button,
-  Container,
-  Grid,
-  Snackbar,
-  TextField,
-} from "@mui/material";
+import { Button, Container, Grid, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ReactQuill from "react-quill";
 import * as React from "react";
@@ -15,18 +8,13 @@ import TaskSubMenuFooter from "../../modules/Task/TaskSubMenuFooter";
 import { Save } from "@mui/icons-material";
 import config from "../../config.json";
 import { useParams } from "react-router";
+import { useSnackbar } from "notistack";
 
 export default function TaskBasicInformation() {
+  const { enqueueSnackbar } = useSnackbar();
   const { taskId } = useParams();
   const userId = sessionStorage.getItem("userId");
   const [task, setTask] = useState(null);
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
 
   useEffect(() => {
     fetch(config.serverURL + "tasks/" + taskId)
@@ -41,7 +29,8 @@ export default function TaskBasicInformation() {
       );
   }, [taskId]);
 
-  const saveChanges = () => {
+  const saveChanges = (event) => {
+    event.preventDefault();
     const task = {
       name: name.current.value,
       briefDescription: briefDescription.current.value,
@@ -63,14 +52,14 @@ export default function TaskBasicInformation() {
     )
       .then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Changes saved.", { variant: "success" });
           return;
         }
         return response.json();
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };
@@ -96,7 +85,7 @@ export default function TaskBasicInformation() {
       <>
         <MyAppBar />
         <Container sx={{ marginTop: 5, width: "50%", marginBottom: 5 }}>
-          <form>
+          <form onSubmit={saveChanges}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Typography variant={"h5"} component={"label"}>
@@ -206,7 +195,7 @@ export default function TaskBasicInformation() {
               <Grid item xs={2} marginTop={4} marginBottom={5}>
                 <Button
                   startIcon={<Save />}
-                  onClick={saveChanges}
+                  type={"submit"}
                   variant="contained"
                 >
                   Save
@@ -215,19 +204,6 @@ export default function TaskBasicInformation() {
             </Grid>
           </form>
         </Container>
-        <Snackbar
-          open={openSnack}
-          autoHideDuration={3000}
-          onClose={handleCloseSnack}
-        >
-          <Alert
-            onClose={handleCloseSnack}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Changes saved.
-          </Alert>
-        </Snackbar>
         <TaskSubMenuFooter state="main" />
       </>
     );

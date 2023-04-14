@@ -2,24 +2,18 @@ import MyAppBar from "../../modules/MyAppBar";
 import Container from "@mui/material/Container";
 import ProcessSubMenuFooter from "../../modules/Process/ProcessSubMenuFooter";
 import DraggableActivityList from "../../modules/Process/DraggableActivityList";
-import { Alert, Button, Snackbar } from "@mui/material";
+import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import config from "../../config.json";
 import { useParams } from "react-router";
 import * as React from "react";
+import { useSnackbar } from "notistack";
 
 export default function ProcessActivities() {
+  const { enqueueSnackbar } = useSnackbar();
   const [orderedList, setOrderedList] = useState([]);
   const { processId } = useParams();
   const userId = sessionStorage.getItem("userId");
-
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
 
   const saveOrder = () => {
     let list = [];
@@ -41,14 +35,14 @@ export default function ProcessActivities() {
     )
       .then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Order changed.", { variant: "success" });
           return;
         }
         return response.json();
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };
@@ -119,19 +113,6 @@ export default function ProcessActivities() {
           Save order
         </Button>
       </Container>
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={3000}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          onClose={handleCloseSnack}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Order changed.
-        </Alert>
-      </Snackbar>
       <ProcessSubMenuFooter state="activities" />
     </>
   );

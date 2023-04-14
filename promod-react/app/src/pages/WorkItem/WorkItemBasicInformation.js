@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import MyAppBar from "../../modules/MyAppBar";
-import {
-  Alert,
-  Button,
-  Container,
-  Grid,
-  Snackbar,
-  TextField,
-} from "@mui/material";
+import { Button, Container, Grid, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ReactQuill from "react-quill";
 import * as React from "react";
@@ -16,6 +9,7 @@ import { Save } from "@mui/icons-material";
 import TaskSubMenuFooter from "../../modules/Task/TaskSubMenuFooter";
 import { useParams } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 export default function WorkItemBasicInformation() {
   const name = useRef();
@@ -37,13 +31,7 @@ export default function WorkItemBasicInformation() {
   const { workItemId } = useParams();
   const userId = sessionStorage.getItem("userId");
   const [workItem, setWorkItem] = useState(null);
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetch(config.serverURL + "workItems/" + workItemId)
@@ -58,7 +46,8 @@ export default function WorkItemBasicInformation() {
       );
   }, [workItemId]);
 
-  const saveChanges = () => {
+  const saveChanges = (event) => {
+    event.preventDefault();
     const workItem = {
       name: name.current.value,
       briefDescription: briefDescription.current.value,
@@ -88,14 +77,14 @@ export default function WorkItemBasicInformation() {
     )
       .then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Changes saved.", { variant: "success" });
           return;
         }
         return response.json();
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };
@@ -112,7 +101,7 @@ export default function WorkItemBasicInformation() {
       <>
         <MyAppBar />
         <Container sx={{ marginTop: 5, width: "50%", marginBottom: 5 }}>
-          <form>
+          <form onSubmit={saveChanges}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Typography variant={"h5"} component={"label"}>
@@ -310,7 +299,7 @@ export default function WorkItemBasicInformation() {
               <Grid item xs={2} marginTop={4} marginBottom={5}>
                 <Button
                   startIcon={<Save />}
-                  onClick={saveChanges}
+                  type={"submit"}
                   variant="contained"
                 >
                   Save
@@ -319,19 +308,6 @@ export default function WorkItemBasicInformation() {
             </Grid>
           </form>
         </Container>
-        <Snackbar
-          open={openSnack}
-          autoHideDuration={3000}
-          onClose={handleCloseSnack}
-        >
-          <Alert
-            onClose={handleCloseSnack}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Changes saved.
-          </Alert>
-        </Snackbar>
         <WorkItemSubMenuFooter state="main" />
       </>
     );

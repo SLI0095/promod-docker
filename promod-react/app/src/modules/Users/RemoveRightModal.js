@@ -8,6 +8,7 @@ import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import config from "../../config.json";
 import { getPath } from "../../resources/Utils";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -22,6 +23,7 @@ const style = {
 };
 
 export default function RemoveRightModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const userId = sessionStorage.getItem("userId");
 
@@ -59,7 +61,7 @@ export default function RemoveRightModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -82,7 +84,7 @@ export default function RemoveRightModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }

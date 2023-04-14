@@ -8,6 +8,7 @@ import { Clear } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import config from "../../config.json";
 import { useParams } from "react-router";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -22,6 +23,7 @@ const style = {
 };
 
 export default function RemoveUserFromGroupModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const { userId } = useParams();
   const { groupId } = useParams();
@@ -57,7 +59,7 @@ export default function RemoveUserFromGroupModal(props) {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };

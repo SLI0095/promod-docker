@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { Grid, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -22,8 +23,9 @@ const style = {
 };
 
 export default function CreateProjectModal() {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const createProject = () => {
+  const createProject = (event) => {
     const project = {
       name: projectName.current.value,
       briefDescription: projectDescription.current.value,
@@ -43,7 +45,8 @@ export default function CreateProjectModal() {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
+          event.preventDefault();
         }
       });
   };
@@ -65,7 +68,7 @@ export default function CreateProjectModal() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={createProject}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1}>
@@ -96,14 +99,12 @@ export default function CreateProjectModal() {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={createProject}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Create project
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginRight: 1 }}

@@ -6,9 +6,10 @@ import { Delete } from "@mui/icons-material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { Alert, Grid, Snackbar } from "@mui/material";
+import { Grid } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { setDefaultProject } from "../../resources/Utils";
+import { useSnackbar } from "notistack";
 const style = {
   position: "absolute",
   top: "50%",
@@ -24,6 +25,7 @@ const style = {
 export default function DeleteProjectModal() {
   const [open, setOpen] = React.useState(false);
   let navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const deleteProject = () => {
     const requestOptions = {
@@ -35,7 +37,7 @@ export default function DeleteProjectModal() {
     )
       .then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Project deleted.", { variant: "error" });
           setOpen(false);
           setDefaultProject();
           navigate("/user/" + userId + "/projects");
@@ -45,7 +47,7 @@ export default function DeleteProjectModal() {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };
@@ -54,13 +56,6 @@ export default function DeleteProjectModal() {
   const handleClose = () => setOpen(false);
   const { projectId } = useParams();
   const userId = sessionStorage.getItem("userId");
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
 
   return (
     <>
@@ -115,19 +110,6 @@ export default function DeleteProjectModal() {
           </form>
         </Modal>
       </div>
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={3000}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          onClose={handleCloseSnack}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Project deleted.
-        </Alert>
-      </Snackbar>
     </>
   );
 }

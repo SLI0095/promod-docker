@@ -7,6 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Grid } from "@mui/material";
 import config from "../config.json";
 import { useNavigate } from "react-router";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -21,6 +22,7 @@ const style = {
 };
 
 export default function DeleteModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const userId = sessionStorage.getItem("userId");
   let navigate = useNavigate();
@@ -53,7 +55,7 @@ export default function DeleteModal(props) {
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
     if (props.type === "task") {
@@ -70,7 +72,7 @@ export default function DeleteModal(props) {
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
     if (props.type === "workItem") {
@@ -91,7 +93,7 @@ export default function DeleteModal(props) {
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
     if (props.type === "role") {
@@ -108,7 +110,7 @@ export default function DeleteModal(props) {
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
   };

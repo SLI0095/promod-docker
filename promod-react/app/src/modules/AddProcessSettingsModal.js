@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import config from "../config.json";
 import { useParams } from "react-router";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -24,9 +25,10 @@ const style = {
 };
 
 export default function AddProcessSettingsModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const [processes, setProcesses] = React.useState([]);
-  const addProcess = () => {
+  const addProcess = (event) => {
     const process = {
       id: selectedProcess.current.getElementsByTagName("input")[0].value,
     };
@@ -54,7 +56,8 @@ export default function AddProcessSettingsModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
+            event.preventDefault();
           }
         });
     } else if (props.type === "task") {
@@ -72,7 +75,8 @@ export default function AddProcessSettingsModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
+            event.preventDefault();
           }
         });
     } else if (props.type === "workItem") {
@@ -93,7 +97,8 @@ export default function AddProcessSettingsModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
+            event.preventDefault();
           }
         });
     }
@@ -138,7 +143,7 @@ export default function AddProcessSettingsModal(props) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={addProcess}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1} lineHeight={4.5}>
@@ -158,6 +163,8 @@ export default function AddProcessSettingsModal(props) {
                         sx={{ minWidth: 175 }}
                         labelId="label1"
                         label="Process"
+                        required
+                        defaultValue={""}
                         ref={selectedProcess}
                       >
                         {processes.map((process) => (
@@ -171,14 +178,12 @@ export default function AddProcessSettingsModal(props) {
                   <Grid item textAlign={"center"} xs={12}>
                     <Button
                       type="submit"
-                      onClick={addProcess}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Add
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginLeft: 1 }}

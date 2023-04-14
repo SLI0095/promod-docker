@@ -9,6 +9,7 @@ import { Grid, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -23,8 +24,9 @@ const style = {
 };
 
 export default function WorkItemStateEditModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const saveState = () => {
+  const saveState = (event) => {
     const state = {
       stateName: stateName.current.value,
       stateDescription: stateDescription.current.value,
@@ -47,7 +49,8 @@ export default function WorkItemStateEditModal(props) {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
+          event.preventDefault();
         }
       });
   };
@@ -74,7 +77,7 @@ export default function WorkItemStateEditModal(props) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={saveState}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1}>
@@ -107,14 +110,12 @@ export default function WorkItemStateEditModal(props) {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={saveState}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Save state
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginRight: 1 }}

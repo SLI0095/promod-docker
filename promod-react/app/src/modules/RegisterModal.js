@@ -3,9 +3,10 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { Alert, Grid, Snackbar, TextField } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import { useRef } from "react";
 import config from "../config.json";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -20,23 +21,8 @@ const style = {
 };
 
 export default function RegisterModal() {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const [openSuccess, setOpenSuccess] = React.useState(false);
-  const [snackText, setSnackText] = React.useState("Unable to register!");
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
-  const handleSuccessClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpen(false);
-    setOpenSuccess(false);
-  };
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const username = useRef();
@@ -44,10 +30,9 @@ export default function RegisterModal() {
   const passwordAgain = useRef();
 
   function registerUser(event) {
-    event.preventDefault();
     if (password.current.value !== passwordAgain.current.value) {
-      setSnackText("Passwords not match!");
-      setOpenSnack(true);
+      enqueueSnackbar("Passwords not match!", { variant: "error" });
+      event.preventDefault();
       return;
     }
     let currentUsername = username.current.value;
@@ -65,11 +50,11 @@ export default function RegisterModal() {
       response
     ) {
       if (response.status === 200) {
-        setOpenSuccess(true);
+        enqueueSnackbar("User registered!", { variant: "success" });
       }
       if (response.status === 400) {
-        setSnackText("User already exists!");
-        setOpenSnack(true);
+        enqueueSnackbar("User already exists!", { variant: "error" });
+        event.preventDefault();
       }
     });
   }
@@ -148,32 +133,6 @@ export default function RegisterModal() {
           </form>
         </Modal>
       </div>
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={6000}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          onClose={handleCloseSnack}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {snackText}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={openSuccess}
-        autoHideDuration={1000}
-        onClose={handleSuccessClose}
-      >
-        <Alert
-          onClose={handleSuccessClose}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          User registered!
-        </Alert>
-      </Snackbar>
     </>
   );
 }

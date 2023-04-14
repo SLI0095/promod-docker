@@ -9,6 +9,7 @@ import * as React from "react";
 import config from "../../config.json";
 import { useParams } from "react-router";
 import { useRef } from "react";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -23,8 +24,9 @@ const style = {
 };
 
 export default function CreateGroupModal() {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const createGroup = () => {
+  const createGroup = (event) => {
     const group = {
       groupName: groupName.current.value,
     };
@@ -43,7 +45,8 @@ export default function CreateGroupModal() {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
+          event.preventDefault();
         }
       });
   };
@@ -64,7 +67,7 @@ export default function CreateGroupModal() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={createGroup}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1}>
@@ -85,14 +88,12 @@ export default function CreateGroupModal() {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={createGroup}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Create
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginRight: 1 }}

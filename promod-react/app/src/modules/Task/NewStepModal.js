@@ -9,8 +9,8 @@ import { Add } from "@mui/icons-material";
 import Container from "@mui/material/Container";
 import { useParams } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
-//TODO form required fields stopped working find out why, try React 17
 const style = {
   position: "absolute",
   top: "50%",
@@ -24,8 +24,9 @@ const style = {
 };
 
 export default function NewStepModal() {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const addStep = () => {
+  const addStep = (event) => {
     const step = {
       name: stepName.current.value,
       description: stepDescription.current.value,
@@ -48,7 +49,8 @@ export default function NewStepModal() {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
+          event.preventDefault();
         }
       });
   };
@@ -71,7 +73,7 @@ export default function NewStepModal() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={addStep}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1}>
@@ -102,14 +104,12 @@ export default function NewStepModal() {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={addStep}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Save step
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginRight: 1 }}

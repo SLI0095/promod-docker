@@ -15,9 +15,11 @@ import ReactQuill from "react-quill";
 import { UploadFile } from "@mui/icons-material";
 import { useNavigate } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 export default function NewProcess() {
   const [checked, setChecked] = React.useState(false);
+  const { enqueueSnackbar } = useSnackbar();
   let navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
   const projectId = sessionStorage.getItem("projectId");
@@ -26,7 +28,8 @@ export default function NewProcess() {
     setChecked(event.target.checked);
   };
 
-  const saveProcess = () => {
+  const saveProcess = (event) => {
+    event.preventDefault();
     let process;
     // eslint-disable-next-line eqeqeq
     if (projectId == -1) {
@@ -66,6 +69,10 @@ export default function NewProcess() {
     if (checked) {
       const file = document.getElementById("fileInput").files[0];
       const fileReader = new FileReader();
+      if (file == undefined) {
+        showError();
+        return;
+      }
 
       fileReader.onload = function (fileLoadedEvent) {
         const textFromFileLoaded = fileLoadedEvent.target.result;
@@ -93,7 +100,7 @@ export default function NewProcess() {
             }
           })
           .then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
       };
       fileReader.readAsText(file);
@@ -112,7 +119,7 @@ export default function NewProcess() {
           }
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
   };
@@ -133,6 +140,18 @@ export default function NewProcess() {
   const changDate = useRef();
   const changeDescription = useRef();
 
+  function checkInput() {
+    const file = document.getElementById("fileInput").files[0];
+    if (file == undefined) {
+      showError();
+    } else {
+      enqueueSnackbar("File selected.", { variant: "success" });
+    }
+  }
+  function showError() {
+    enqueueSnackbar("No file selected!", { variant: "error" });
+  }
+
   return (
     <>
       <MyAppBar />
@@ -140,7 +159,7 @@ export default function NewProcess() {
         <Typography variant={"h4"} component={"h2"} marginBottom={7}>
           New process
         </Typography>
-        <form>
+        <form onSubmit={saveProcess}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Typography variant={"h5"} component={"label"}>
@@ -270,11 +289,17 @@ export default function NewProcess() {
                 component="label"
               >
                 Upload File
-                <input type="file" id="fileInput" accept=".bpmn" hidden />
+                <input
+                  type="file"
+                  id="fileInput"
+                  accept=".bpmn"
+                  hidden
+                  onInput={checkInput}
+                />
               </Button>
             </Grid>
             <Grid item xs={12} marginTop={4} marginBottom={5}>
-              <Button onClick={saveProcess} variant="contained">
+              <Button type={"submit"} variant="contained">
                 Create
               </Button>
               <Button

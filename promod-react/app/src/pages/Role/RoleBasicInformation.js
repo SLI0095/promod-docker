@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import MyAppBar from "../../modules/MyAppBar";
-import {
-  Alert,
-  Button,
-  Container,
-  Grid,
-  Snackbar,
-  TextField,
-} from "@mui/material";
+import { Button, Container, Grid, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import ReactQuill from "react-quill";
 import * as React from "react";
@@ -16,8 +9,10 @@ import { Save } from "@mui/icons-material";
 import TaskSubMenuFooter from "../../modules/Task/TaskSubMenuFooter";
 import { useParams } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 export default function RoleBasicInformation() {
+  const { enqueueSnackbar } = useSnackbar();
   const name = useRef();
   const briefDescription = useRef();
   const mainDescription = useRef();
@@ -30,13 +25,6 @@ export default function RoleBasicInformation() {
   const { roleId } = useParams();
   const userId = sessionStorage.getItem("userId");
   const [role, setRole] = useState(null);
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
 
   useEffect(() => {
     fetch(config.serverURL + "roles/" + roleId)
@@ -51,7 +39,8 @@ export default function RoleBasicInformation() {
       );
   }, [roleId]);
 
-  const saveChanges = () => {
+  const saveChanges = (event) => {
+    event.preventDefault();
     const role = {
       name: name.current.value,
       briefDescription: briefDescription.current.value,
@@ -73,14 +62,14 @@ export default function RoleBasicInformation() {
     )
       .then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Changes saved.", { variant: "success" });
           return;
         }
         return response.json();
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };
@@ -97,7 +86,7 @@ export default function RoleBasicInformation() {
       <>
         <MyAppBar />
         <Container sx={{ marginTop: 5, width: "50%", marginBottom: 5 }}>
-          <form>
+          <form onSubmit={saveChanges}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
                 <Typography variant={"h5"} component={"label"}>
@@ -207,7 +196,7 @@ export default function RoleBasicInformation() {
               <Grid item xs={2} marginTop={4} marginBottom={5}>
                 <Button
                   startIcon={<Save />}
-                  onClick={saveChanges}
+                  type={"submit"}
                   variant="contained"
                 >
                   Save
@@ -216,19 +205,6 @@ export default function RoleBasicInformation() {
             </Grid>
           </form>
         </Container>
-        <Snackbar
-          open={openSnack}
-          autoHideDuration={3000}
-          onClose={handleCloseSnack}
-        >
-          <Alert
-            onClose={handleCloseSnack}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Changes saved.
-          </Alert>
-        </Snackbar>
         <RoleSubMenuFooter state="main" />
       </>
     );

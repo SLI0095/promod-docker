@@ -1,15 +1,6 @@
-//TODO - name and description editable, plus save button and owner plus list of users and right same as in element settings with add user right button
 import { useEffect, useRef, useState } from "react";
 import MyAppBar from "../../modules/MyAppBar";
-import {
-  Alert,
-  Button,
-  Container,
-  Grid,
-  List,
-  Snackbar,
-  TextField,
-} from "@mui/material";
+import { Button, Container, Grid, List, TextField } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { Save } from "@mui/icons-material";
 import * as React from "react";
@@ -18,21 +9,15 @@ import { useParams } from "react-router";
 import UserListItem from "../../modules/UserListItem";
 import AddUserModal from "../../modules/Users/AddUserModal";
 import DeleteProjectModal from "../../modules/Projects/DeleteProjectModal";
+import { useSnackbar } from "notistack";
 
 export default function ProjectDetail() {
   const [project, setProject] = useState(null);
-  const [openSnack, setOpenSnack] = React.useState(false);
   const { projectId } = useParams();
   const name = useRef();
   const briefDescription = useRef();
   const userId = sessionStorage.getItem("userId");
-
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     fetch(config.serverURL + "projects/" + projectId)
@@ -63,14 +48,14 @@ export default function ProjectDetail() {
     )
       .then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Changes saved.", { variant: "success" });
           return;
         }
         return response.json();
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };
@@ -100,44 +85,44 @@ export default function ProjectDetail() {
                 Project detail
               </Typography>
             </Grid>
-            <Grid item xs={12}>
-              <Typography variant={"h5"} component={"label"}>
-                Name:
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin={"normal"}
-                inputRef={name}
-                defaultValue={project.name}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} marginTop={5}>
-              <Typography variant={"h5"} component={"label"}>
-                Brief description:
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                margin={"normal"}
-                inputRef={briefDescription}
-                defaultValue={project.briefDescription}
-                multiline
-                rows={5}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={12} marginTop={2} marginBottom={5}>
-              <Button
-                startIcon={<Save />}
-                onClick={saveChanges}
-                variant="contained"
-              >
-                Save
-              </Button>
-              {getDeleteButton()}
-            </Grid>
+            <form onSubmit={saveChanges}>
+              <Grid item xs={12}>
+                <Typography variant={"h5"} component={"label"}>
+                  Name:
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin={"normal"}
+                  required
+                  inputRef={name}
+                  defaultValue={project.name}
+                  fullWidth
+                />
+              </Grid>
+              <Grid item xs={12} marginTop={5}>
+                <Typography variant={"h5"} component={"label"}>
+                  Brief description:
+                </Typography>
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin={"normal"}
+                  inputRef={briefDescription}
+                  defaultValue={project.briefDescription}
+                  multiline
+                  rows={5}
+                  fullWidth
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} marginTop={2} marginBottom={5}>
+                <Button startIcon={<Save />} type="submit" variant="contained">
+                  Save
+                </Button>
+                {getDeleteButton()}
+              </Grid>
+            </form>
           </Grid>
 
           <Typography variant={"h7"} component={"h3"} marginTop={3}>
@@ -207,20 +192,6 @@ export default function ProjectDetail() {
             ))}
           </List>
           <AddUserModal type={"project"} itemId={projectId} />
-
-          <Snackbar
-            open={openSnack}
-            autoHideDuration={3000}
-            onClose={handleCloseSnack}
-          >
-            <Alert
-              onClose={handleCloseSnack}
-              severity="success"
-              sx={{ width: "100%" }}
-            >
-              Changes saved.
-            </Alert>
-          </Snackbar>
         </Container>
       </>
     );

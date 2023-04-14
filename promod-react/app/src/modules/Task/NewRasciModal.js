@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import { useParams } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -23,11 +24,12 @@ const style = {
   p: 4,
 };
 
-//TODO add check if none selected
 export default function NewRasciModal() {
   const [roles, setRoles] = useState([]);
   const [open, setOpen] = React.useState(false);
-  const addRasci = () => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  function addRasci(event) {
     const rasci = {
       role: {
         id: selectedRole.current.getElementsByTagName("input")[0].value,
@@ -52,20 +54,28 @@ export default function NewRasciModal() {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
+          event.preventDefault();
         }
       });
-  };
+  }
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const selectedRole = useRef();
   const rasciType = useRef();
   const { taskId } = useParams();
   const userId = sessionStorage.getItem("userId");
+  const projectId = sessionStorage.getItem("projectId");
 
   useEffect(() => {
     fetch(
-      config.serverURL + "roles/forTask?userId=" + userId + "&taskId=" + taskId
+      config.serverURL +
+        "roles/forTask?userId=" +
+        userId +
+        "&taskId=" +
+        taskId +
+        "&projectId=" +
+        projectId
     )
       .then((res) => res.json())
       .then(
@@ -76,7 +86,7 @@ export default function NewRasciModal() {
           alert(error);
         }
       );
-  }, [taskId, userId]);
+  }, [projectId, taskId, userId]);
 
   return (
     <>
@@ -90,7 +100,7 @@ export default function NewRasciModal() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={addRasci}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1} lineHeight={4.5}>
@@ -110,6 +120,7 @@ export default function NewRasciModal() {
                         sx={{ minWidth: 175 }}
                         labelId="label1"
                         label="Role"
+                        required
                         ref={selectedRole}
                         defaultValue={""}
                       >
@@ -142,14 +153,12 @@ export default function NewRasciModal() {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={addRasci}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Save RASCI
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginLeft: 1 }}

@@ -1,19 +1,13 @@
 import MenuItem from "@mui/material/MenuItem";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
-import {
-  Alert,
-  FormControl,
-  Grid,
-  InputLabel,
-  Select,
-  Snackbar,
-} from "@mui/material";
+import { FormControl, Grid, InputLabel, Select } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import * as React from "react";
 import config from "../config.json";
 import { useEffect, useRef } from "react";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -28,17 +22,11 @@ const style = {
 };
 
 export default function NewConfigurationModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const [projects, setProjects] = React.useState([]);
   const userId = sessionStorage.getItem("userId");
   const selectedProject = useRef();
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
 
   useEffect(() => {
     fetch(config.serverURL + "projects/canEdit?userId=" + userId)
@@ -56,6 +44,11 @@ export default function NewConfigurationModal(props) {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  const showSuccess = () => {
+    enqueueSnackbar("Configuration created.", { variant: "success" });
+  };
+
   const handleClose = () => setOpen(false);
   const createConfig = () => {
     const projectId =
@@ -77,14 +70,13 @@ export default function NewConfigurationModal(props) {
       )
         .then((response) => {
           if (response.ok) {
-            setOpenSnack(true);
-            setOpen(false);
+            showSuccess();
             return;
           }
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
     if (props.type === "task") {
@@ -100,14 +92,14 @@ export default function NewConfigurationModal(props) {
       )
         .then((response) => {
           if (response.ok) {
-            setOpenSnack(true);
+            showSuccess();
             setOpen(false);
             return;
           }
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
     if (props.type === "workItem") {
@@ -123,14 +115,14 @@ export default function NewConfigurationModal(props) {
       )
         .then((response) => {
           if (response.ok) {
-            setOpenSnack(true);
+            showSuccess();
             setOpen(false);
             return;
           }
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
     if (props.type === "role") {
@@ -146,14 +138,14 @@ export default function NewConfigurationModal(props) {
       )
         .then((response) => {
           if (response.ok) {
-            setOpenSnack(true);
+            showSuccess();
             setOpen(false);
             return;
           }
           return response.json();
         })
         .then((data) => {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         });
     }
   };
@@ -219,19 +211,6 @@ export default function NewConfigurationModal(props) {
             </Box>
           </form>
         </Modal>
-        <Snackbar
-          open={openSnack}
-          autoHideDuration={3000}
-          onClose={handleCloseSnack}
-        >
-          <Alert
-            onClose={handleCloseSnack}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Configuration created.
-          </Alert>
-        </Snackbar>
       </div>
     </>
   );

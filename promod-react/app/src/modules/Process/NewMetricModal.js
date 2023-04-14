@@ -9,6 +9,7 @@ import { Add } from "@mui/icons-material";
 import Container from "@mui/material/Container";
 import { useParams } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -23,8 +24,9 @@ const style = {
 };
 
 export default function NewMetricModal() {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const addMetric = () => {
+  const addMetric = (event) => {
     const metric = {
       name: metricName.current.value,
       description: metricDescription.current.value,
@@ -51,7 +53,8 @@ export default function NewMetricModal() {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
+          event.preventDefault();
         }
       });
   };
@@ -74,7 +77,7 @@ export default function NewMetricModal() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={addMetric}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1}>
@@ -105,14 +108,12 @@ export default function NewMetricModal() {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={addMetric}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Save metric
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginRight: 1 }}

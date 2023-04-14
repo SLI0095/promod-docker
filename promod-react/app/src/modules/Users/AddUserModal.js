@@ -10,6 +10,7 @@ import Container from "@mui/material/Container";
 import MenuItem from "@mui/material/MenuItem";
 import config from "../../config.json";
 import { getPath } from "../../resources/Utils";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -24,6 +25,7 @@ const style = {
 };
 
 export default function AddUserModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [userTypes, setUserTypes] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -46,7 +48,7 @@ export default function AddUserModal(props) {
       );
   }, [userId]);
 
-  const addRights = () => {
+  const addRights = (event) => {
     const userType = {
       id: selectedUserType.current.getElementsByTagName("input")[0].value,
     };
@@ -72,7 +74,8 @@ export default function AddUserModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
+            event.preventDefault();
           }
         });
     }
@@ -93,7 +96,7 @@ export default function AddUserModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -111,7 +114,7 @@ export default function AddUserModal(props) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={addRights}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1} lineHeight={4.5}>
@@ -133,6 +136,7 @@ export default function AddUserModal(props) {
                         label="User or group"
                         ref={selectedUserType}
                         defaultValue={""}
+                        required
                       >
                         {userTypes.map((type) => (
                           <MenuItem key={type.id} value={type.id}>
@@ -165,14 +169,12 @@ export default function AddUserModal(props) {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={addRights}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >
                       Add
                     </Button>
                     <Button
-                      type="submit"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginLeft: 1 }}

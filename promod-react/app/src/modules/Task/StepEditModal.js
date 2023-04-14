@@ -9,6 +9,7 @@ import { Edit } from "@mui/icons-material";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -23,8 +24,9 @@ const style = {
 };
 
 export default function StepEditModal(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
-  const saveStep = () => {
+  const saveStep = (event) => {
     const step = {
       name: stepName.current.value,
       description: stepDescription.current.value,
@@ -47,7 +49,8 @@ export default function StepEditModal(props) {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
+          event.preventDefault();
         }
       });
   };
@@ -74,7 +77,7 @@ export default function StepEditModal(props) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={saveStep}>
             <Box sx={style}>
               <Container sx={{ width: "50%" }}>
                 <Grid container spacing={1}>
@@ -107,7 +110,6 @@ export default function StepEditModal(props) {
                   <Grid textAlign={"center"} item xs={12}>
                     <Button
                       type="submit"
-                      onClick={saveStep}
                       variant="contained"
                       sx={{ marginRight: 1 }}
                     >

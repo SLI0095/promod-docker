@@ -10,15 +10,7 @@ import Container from "@mui/material/Container";
 import ProcessSubMenuFooter from "../../modules/Process/ProcessSubMenuFooter";
 import { useEffect, useRef, useState } from "react";
 import Button from "@mui/material/Button";
-import {
-  Alert,
-  Box,
-  FormControl,
-  Grid,
-  InputLabel,
-  Select,
-  Snackbar,
-} from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, Select } from "@mui/material";
 import { Download, Save } from "@mui/icons-material";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
@@ -26,6 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
 import { useParams } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -55,6 +48,7 @@ export default function ProcessWorkflow() {
   const { processId } = useParams();
   const userId = sessionStorage.getItem("userId");
   const projectId = sessionStorage.getItem("projectId");
+  const { enqueueSnackbar } = useSnackbar();
 
   function getElement(id) {
     var result;
@@ -313,7 +307,7 @@ export default function ProcessWorkflow() {
       )
         .then((response) => {
           if (response.ok) {
-            setOpenSnack(true);
+            enqueueSnackbar("Changes saved.", { variant: "success" });
             //setReload(true);
             return;
           }
@@ -321,7 +315,7 @@ export default function ProcessWorkflow() {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     });
@@ -370,15 +364,6 @@ export default function ProcessWorkflow() {
       a.click();
     });
   }
-
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
-
   return (
     <>
       <MyAppBar />
@@ -527,19 +512,6 @@ export default function ProcessWorkflow() {
       <Container
         sx={{ marginTop: 5, width: "50%", marginBottom: 7 }}
       ></Container>
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={3000}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          onClose={handleCloseSnack}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Saved.
-        </Alert>
-      </Snackbar>
       <ProcessSubMenuFooter state="workflow" />
     </>
   );

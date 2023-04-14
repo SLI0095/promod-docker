@@ -1,27 +1,22 @@
 import MyAppBar from "../modules/MyAppBar";
 import Container from "@mui/material/Container";
-import { Alert, List, Snackbar } from "@mui/material";
+import { List } from "@mui/material";
 import * as React from "react";
 import { getFooter, getPath } from "../resources/Utils";
 import { useEffect, useState } from "react";
 import config from "../config.json";
 import ConfigurationListItem from "../modules/Configurations/ConfigurationListItem";
 import { useNavigate, useParams } from "react-router";
+import { useSnackbar } from "notistack";
 
 export default function Configurations(props) {
-  const [openSnack, setOpenSnack] = React.useState(false);
   const userId = sessionStorage.getItem("userId");
   const { workItemId } = useParams();
   const { taskId } = useParams();
   const { roleId } = useParams();
   const { processId } = useParams();
   let navigate = useNavigate();
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
+  const { enqueueSnackbar } = useSnackbar();
 
   const checkProjectAccess = (projectId, projectName, configId) => {
     // eslint-disable-next-line eqeqeq
@@ -45,7 +40,7 @@ export default function Configurations(props) {
         switchToSelectedProject(projectId, projectName);
         navigateToDetail(props.type, configId);
       } else {
-        setOpenSnack(true);
+        enqueueSnackbar("Access to project not granted.", { variant: "error" });
       }
     });
   };
@@ -137,19 +132,6 @@ export default function Configurations(props) {
             />
           ))}
         </List>
-        <Snackbar
-          open={openSnack}
-          autoHideDuration={3000}
-          onClose={handleCloseSnack}
-        >
-          <Alert
-            onClose={handleCloseSnack}
-            severity="error"
-            sx={{ width: "100%" }}
-          >
-            Access to project not granted.
-          </Alert>
-        </Snackbar>
       </Container>
       {getFooter(props.type, "configurations")}
     </>

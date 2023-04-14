@@ -6,12 +6,15 @@ import * as React from "react";
 import ReactQuill from "react-quill";
 import { useNavigate } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 export default function NewTask() {
   let navigate = useNavigate();
   const projectId = sessionStorage.getItem("projectId");
+  const { enqueueSnackbar } = useSnackbar();
 
-  const saveTask = () => {
+  const saveTask = (event) => {
+    event.preventDefault();
     let task;
     // eslint-disable-next-line eqeqeq
     if (projectId == -1) {
@@ -56,7 +59,7 @@ export default function NewTask() {
         return response.json();
       })
       .then((data) => {
-        alert(data.message);
+        enqueueSnackbar(data.message, { variant: "error" });
       });
   };
   const cancelCreation = () => {
@@ -79,7 +82,7 @@ export default function NewTask() {
         <Typography variant={"h4"} component={"h2"} marginBottom={7}>
           New task
         </Typography>
-        <form>
+        <form onSubmit={saveTask}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Typography variant={"h5"} component={"label"}>
@@ -158,7 +161,7 @@ export default function NewTask() {
               <ReactQuill theme="snow" ref={changeDescription} />
             </Grid>
             <Grid item xs={12} marginTop={4} marginBottom={5}>
-              <Button onClick={saveTask} variant="contained">
+              <Button type={"submit"} variant="contained">
                 Create
               </Button>
               <Button

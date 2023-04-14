@@ -8,6 +8,7 @@ import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import config from "../config.json";
 import { useParams } from "react-router";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -22,6 +23,7 @@ const style = {
 };
 
 export default function DeleteModalListItem(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = React.useState(false);
   const userId = sessionStorage.getItem("userId");
   const { processId } = useParams();
@@ -60,7 +62,7 @@ export default function DeleteModalListItem(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -87,7 +89,7 @@ export default function DeleteModalListItem(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -118,7 +120,7 @@ export default function DeleteModalListItem(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -149,7 +151,7 @@ export default function DeleteModalListItem(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -163,7 +165,7 @@ export default function DeleteModalListItem(props) {
         body: JSON.stringify(workItem),
       };
       fetch(
-        config.serverURL + "task/" + taskId + "/removeOutput?userId=" + userId,
+        config.serverURL + "tasks/" + taskId + "/removeOutput?userId=" + userId,
         requestOptions
       )
         .then((response) => {
@@ -176,7 +178,7 @@ export default function DeleteModalListItem(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -203,7 +205,7 @@ export default function DeleteModalListItem(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }

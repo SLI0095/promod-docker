@@ -6,13 +6,16 @@ import * as React from "react";
 import ReactQuill from "react-quill";
 import { useNavigate } from "react-router";
 import config from "../../config.json";
+import { useSnackbar } from "notistack";
 
 export default function NewRole() {
   let navigate = useNavigate();
   const userId = sessionStorage.getItem("userId");
   const projectId = sessionStorage.getItem("projectId");
+  const { enqueueSnackbar } = useSnackbar();
 
-  const saveRole = () => {
+  const saveRole = (event) => {
+    event.preventDefault();
     let role;
     // eslint-disable-next-line eqeqeq
     if (projectId == -1) {
@@ -57,7 +60,7 @@ export default function NewRole() {
       })
       .then((data) => {
         if (data !== undefined) {
-          alert(data.message);
+          enqueueSnackbar(data.message, { variant: "error" });
         }
       });
   };
@@ -81,7 +84,7 @@ export default function NewRole() {
         <Typography variant={"h4"} component={"h2"} marginBottom={7}>
           New role
         </Typography>
-        <form>
+        <form onSubmit={saveRole}>
           <Grid container spacing={1}>
             <Grid item xs={12}>
               <Typography variant={"h5"} component={"label"}>
@@ -160,7 +163,7 @@ export default function NewRole() {
               <ReactQuill theme="snow" ref={changeDescription} />
             </Grid>
             <Grid item xs={12} marginTop={4} marginBottom={5}>
-              <Button onClick={saveRole} variant="contained">
+              <Button type={"submit"} variant="contained">
                 Create
               </Button>
               <Button

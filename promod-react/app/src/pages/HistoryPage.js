@@ -5,13 +5,7 @@ import RoleSubMenuFooter from "../modules/Role/RoleSubMenuFooter";
 import * as React from "react";
 import MyAppBar from "../modules/MyAppBar";
 import Container from "@mui/material/Container";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Alert,
-  Snackbar,
-} from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -23,21 +17,16 @@ import { WorkItemSnapshotDetail } from "../modules/History/WorkItemSnapshotDetai
 import { RoleSnapshotDetail } from "../modules/History/RoleSnapshotDetail";
 import { TaskSnapshotDetail } from "../modules/History/TaskSnapshotDetail";
 import { ProcessSnapshotDetail } from "../modules/History/ProcessSnapshotDetail";
+import { useSnackbar } from "notistack";
 
 export default function HistoryPage(props) {
+  const { enqueueSnackbar } = useSnackbar();
   const [item, setItem] = useState({ snapshots: [] });
   const userId = sessionStorage.getItem("userId");
   const { workItemId } = useParams();
   const { taskId } = useParams();
   const { roleId } = useParams();
   const { processId } = useParams();
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
 
   useEffect(() => {
     if (props.type === "workItem") {
@@ -135,10 +124,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Restore successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -149,10 +138,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Restore successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -163,10 +152,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Restore successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -177,10 +166,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Restore successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -202,10 +191,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Revert successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -216,10 +205,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Revert successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -230,10 +219,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Revert successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -244,10 +233,10 @@ export default function HistoryPage(props) {
         requestOptions
       ).then((response) => {
         if (response.ok) {
-          setOpenSnack(true);
+          enqueueSnackbar("Revert successful.", { variant: "success" });
         } else {
           response.json().then((data) => {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           });
         }
       });
@@ -294,19 +283,6 @@ export default function HistoryPage(props) {
         ))}
         <CreateSnapshotModal element={item} type={props.type} />
       </Container>
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={3000}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          onClose={handleCloseSnack}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Restore/revert successful.
-        </Alert>
-      </Snackbar>
       {getFooter(props.type)}
     </>
   );

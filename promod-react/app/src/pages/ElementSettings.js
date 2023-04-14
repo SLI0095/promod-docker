@@ -2,14 +2,7 @@ import MyAppBar from "../modules/MyAppBar";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import {
-  Alert,
-  Checkbox,
-  FormControlLabel,
-  FormGroup,
-  List,
-  Snackbar,
-} from "@mui/material";
+import { Checkbox, FormControlLabel, FormGroup, List } from "@mui/material";
 import UserListItem from "../modules/UserListItem";
 import AddUserModal from "../modules/Users/AddUserModal";
 import MyListItem from "../modules/MyListItem";
@@ -20,6 +13,7 @@ import { useParams } from "react-router";
 import { useEffect, useState } from "react";
 import config from "../config.json";
 import { getFooter } from "../resources/Utils";
+import { useSnackbar } from "notistack";
 
 export default function ElementSettings(props) {
   const [item, setItem] = useState({
@@ -39,14 +33,7 @@ export default function ElementSettings(props) {
   const { processId } = useParams();
   const { userId } = useParams();
   const projectId = sessionStorage.getItem("projectId");
-
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    setOpenSnack(false);
-  };
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (props.type === "workItem") {
@@ -149,14 +136,14 @@ export default function ElementSettings(props) {
         .then((response) => {
           if (response.ok) {
             setSelected(checked);
-            setOpenSnack(true);
+            enqueueSnackbar("Changes saved.", { variant: "success" });
             return;
           }
           return response.json();
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -174,14 +161,14 @@ export default function ElementSettings(props) {
         .then((response) => {
           if (response.ok) {
             setSelected(checked);
-            setOpenSnack(true);
+            enqueueSnackbar("Changes saved.", { variant: "success" });
             return;
           }
           return response.json();
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -199,14 +186,14 @@ export default function ElementSettings(props) {
         .then((response) => {
           if (response.ok) {
             setSelected(checked);
-            setOpenSnack(true);
+            enqueueSnackbar("Changes saved.", { variant: "success" });
             return;
           }
           return response.json();
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -224,14 +211,14 @@ export default function ElementSettings(props) {
         .then((response) => {
           if (response.ok) {
             setSelected(checked);
-            setOpenSnack(true);
+            enqueueSnackbar("Changes saved.", { variant: "success" });
             return;
           }
           return response.json();
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
@@ -490,19 +477,6 @@ export default function ElementSettings(props) {
           User settings
         </Typography>
         {getUsersPart()}
-        <Snackbar
-          open={openSnack}
-          autoHideDuration={3000}
-          onClose={handleCloseSnack}
-        >
-          <Alert
-            onClose={handleCloseSnack}
-            severity="success"
-            sx={{ width: "100%" }}
-          >
-            Changes saved.
-          </Alert>
-        </Snackbar>
       </Container>
       {getFooter(props.type, "settings")}
     </>

@@ -1,10 +1,8 @@
 import {
-  Alert,
   Box,
   Button,
   Container,
   Grid,
-  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
@@ -14,19 +12,13 @@ import { useRef } from "react";
 import config from "../config.json";
 import { useNavigate } from "react-router";
 import { setDefaultProject } from "../resources/Utils";
+import { useSnackbar } from "notistack";
 
 export default function StartPage() {
-  const [openSnack, setOpenSnack] = React.useState(false);
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenSnack(false);
-  };
   const username = useRef();
   const password = useRef();
   let navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   function login(event) {
     event.preventDefault();
@@ -48,11 +40,12 @@ export default function StartPage() {
           sessionStorage.setItem("isLoggedIn", true);
           setDefaultProject();
           navigate("/user/" + userId + "/processes");
-          console.log(data);
         });
       }
       if (response.status === 400) {
-        setOpenSnack(true);
+        enqueueSnackbar("Unable to log in, please try again.", {
+          variant: "error",
+        });
       }
     });
   }
@@ -70,7 +63,7 @@ export default function StartPage() {
             ProMod - Process Modeling Tool
           </Typography>
         </Box>
-        <form>
+        <form onSubmit={login}>
           <Grid container spacing={1}>
             <Grid
               display="flex"
@@ -113,7 +106,6 @@ export default function StartPage() {
                 }}
               >
                 <Button
-                  onClick={login}
                   type={"submit"}
                   variant="contained"
                   sx={{
@@ -128,19 +120,6 @@ export default function StartPage() {
           </Grid>
         </form>
       </Container>
-      <Snackbar
-        open={openSnack}
-        autoHideDuration={6000}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          onClose={handleCloseSnack}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Unable to log in, please try again.
-        </Alert>
-      </Snackbar>
     </>
   );
 }

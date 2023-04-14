@@ -7,6 +7,7 @@ import { Grid } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import IconButton from "@mui/material/IconButton";
 import config from "../config.json";
+import { useSnackbar } from "notistack";
 
 const style = {
   position: "absolute",
@@ -23,6 +24,7 @@ const style = {
 export default function DeleteUsableInModal(props) {
   const [open, setOpen] = React.useState(false);
   const userId = sessionStorage.getItem("userId");
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleOpen = () => {
     setOpen(true);
@@ -58,7 +60,7 @@ export default function DeleteUsableInModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     } else {
@@ -83,7 +85,7 @@ export default function DeleteUsableInModal(props) {
         })
         .then((data) => {
           if (data !== undefined) {
-            alert(data.message);
+            enqueueSnackbar(data.message, { variant: "error" });
           }
         });
     }
