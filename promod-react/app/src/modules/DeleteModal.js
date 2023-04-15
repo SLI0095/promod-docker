@@ -152,6 +152,7 @@ export default function DeleteModal(props) {
                     onClick={handleClose}
                     variant="contained"
                     sx={{ marginLeft: 1 }}
+                    color="error"
                   >
                     No
                   </Button>

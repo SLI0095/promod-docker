@@ -15,6 +15,7 @@ export default function NewWorkItem() {
   const { enqueueSnackbar } = useSnackbar();
 
   const saveWorkItem = (event) => {
+    event.preventDefault();
     let workItem;
     // eslint-disable-next-line eqeqeq
     if (projectId == -1) {
@@ -74,7 +75,6 @@ export default function NewWorkItem() {
       .then((data) => {
         if (data !== undefined) {
           enqueueSnackbar(data.message, { variant: "error" });
-          event.preventDefault();
         }
       });
   };
@@ -138,7 +138,7 @@ export default function NewWorkItem() {
             <Grid item xs={12}>
               <ReactQuill theme="snow" ref={mainDescription} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} marginTop={5}>
               <Typography variant={"h5"} component={"label"}>
                 Work item type:
               </Typography>
@@ -151,7 +151,7 @@ export default function NewWorkItem() {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} marginTop={5}>
               <Typography variant={"h5"} component={"label"}>
                 URL address:
               </Typography>
@@ -220,7 +220,7 @@ export default function NewWorkItem() {
             <Grid item xs={12}>
               <ReactQuill theme="snow" ref={reasonForNotNeeding} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} marginTop={5}>
               <Typography variant={"h5"} component={"label"}>
                 Version:
               </Typography>

@@ -108,6 +108,7 @@ export default function RemoveUserFromGroupModal(props) {
                   <Button
                     onClick={handleClose}
                     variant="contained"
+                    color="error"
                     sx={{ marginLeft: 1 }}
                   >
                     No

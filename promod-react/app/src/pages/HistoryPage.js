@@ -273,6 +273,7 @@ export default function HistoryPage(props) {
               <Button
                 sx={{ marginTop: 2, marginLeft: 1 }}
                 variant={"contained"}
+                color="secondary"
                 value={snap.id}
                 onClick={revertSnapshot}
               >

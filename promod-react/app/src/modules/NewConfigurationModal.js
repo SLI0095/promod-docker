@@ -50,7 +50,8 @@ export default function NewConfigurationModal(props) {
   };
 
   const handleClose = () => setOpen(false);
-  const createConfig = () => {
+  const createConfig = (event) => {
+    event.preventDefault();
     const projectId =
       selectedProject.current.getElementsByTagName("input")[0].value;
     const requestOptions = {
@@ -162,7 +163,7 @@ export default function NewConfigurationModal(props) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={createConfig}>
             <Box sx={style}>
               <Grid container spacing={1}>
                 <Grid textAlign={"center"} item xs={12}>
@@ -178,6 +179,7 @@ export default function NewConfigurationModal(props) {
                       labelId="label1"
                       label="Project"
                       ref={selectedProject}
+                      required
                       defaultValue={""}
                     >
                       <MenuItem key={-1} value={-1}>
@@ -193,7 +195,7 @@ export default function NewConfigurationModal(props) {
                 </Grid>
                 <Grid textAlign={"center"} item xs={12}>
                   <Button
-                    onClick={createConfig}
+                    type="submit"
                     variant="contained"
                     sx={{ marginRight: 1 }}
                   >
@@ -203,6 +205,7 @@ export default function NewConfigurationModal(props) {
                     onClick={handleClose}
                     variant="contained"
                     sx={{ marginLeft: 1 }}
+                    color="error"
                   >
                     Cancel
                   </Button>

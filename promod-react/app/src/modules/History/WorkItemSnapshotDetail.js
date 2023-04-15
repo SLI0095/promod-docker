@@ -29,7 +29,7 @@ export function WorkItemSnapshotDetail(props) {
 
   return (
     <>
-      <Button variant="contained" onClick={handleOpen} sx={{ marginTop: 2 }}>
+      <Button variant="outlined" onClick={handleOpen} sx={{ marginTop: 2 }}>
         Detail
       </Button>
       <div style={{ height: 0, width: 0, display: "inline-flex" }}>

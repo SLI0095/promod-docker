@@ -145,7 +145,7 @@ export default function WorkItemBasicInformation() {
                   ref={mainDescription}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} marginTop={5}>
                 <Typography variant={"h5"} component={"label"}>
                   Work item type:
                 </Typography>
@@ -159,7 +159,7 @@ export default function WorkItemBasicInformation() {
                   defaultValue={workItem.workItemType}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} marginTop={5}>
                 <Typography variant={"h5"} component={"label"}>
                   URL address:
                 </Typography>
@@ -257,7 +257,7 @@ export default function WorkItemBasicInformation() {
                   ref={reasonForNotNeeding}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} marginTop={5}>
                 <Typography variant={"h5"} component={"label"}>
                   Version:
                 </Typography>

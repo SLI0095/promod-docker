@@ -32,7 +32,8 @@ export default function ProjectDetail() {
       );
   }, [projectId]);
 
-  const saveChanges = () => {
+  const saveChanges = (event) => {
+    event.preventDefault();
     const project = {
       name: name.current.value,
       briefDescription: briefDescription.current.value,
@@ -79,13 +80,13 @@ export default function ProjectDetail() {
       <>
         <MyAppBar />
         <Container sx={{ marginTop: 5, width: "50%", marginBottom: 5 }}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <Typography variant={"h4"} component={"h2"}>
-                Project detail
-              </Typography>
-            </Grid>
-            <form onSubmit={saveChanges}>
+          <form onSubmit={saveChanges}>
+            <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <Typography variant={"h4"} component={"h2"}>
+                  Project detail
+                </Typography>
+              </Grid>
               <Grid item xs={12}>
                 <Typography variant={"h5"} component={"label"}>
                   Name:
@@ -122,8 +123,8 @@ export default function ProjectDetail() {
                 </Button>
                 {getDeleteButton()}
               </Grid>
-            </form>
-          </Grid>
+            </Grid>
+          </form>
 
           <Typography variant={"h7"} component={"h3"} marginTop={3}>
             Owner of the project

@@ -71,7 +71,7 @@ export default function RegisterModal() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form>
+          <form onSubmit={registerUser}>
             <Box sx={style}>
               <Grid container spacing={1}>
                 <Grid textAlign={"center"} item xs={12}>
@@ -118,7 +118,6 @@ export default function RegisterModal() {
                   >
                     <Button
                       type="submit"
-                      onClick={registerUser}
                       variant="contained"
                       sx={{
                         marginRight: 2,
@@ -126,6 +125,14 @@ export default function RegisterModal() {
                     >
                       Register
                     </Button>
+                    <Button
+                    onClick={handleClose}
+                    variant="contained"
+                    color="error"
+                    sx={{ marginLeft: 1 }}
+                  >
+                    Cancel
+                  </Button>
                   </Box>
                 </Grid>
               </Grid>

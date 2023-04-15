@@ -37,7 +37,7 @@ export default function DeleteProjectModal() {
     )
       .then((response) => {
         if (response.ok) {
-          enqueueSnackbar("Project deleted.", { variant: "error" });
+          enqueueSnackbar("Project deleted.", { variant: "success" });
           setOpen(false);
           setDefaultProject();
           navigate("/user/" + userId + "/projects");
@@ -97,6 +97,7 @@ export default function DeleteProjectModal() {
                       Yes
                     </Button>
                     <Button
+                      color="error"
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginLeft: 1 }}

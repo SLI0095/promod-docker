@@ -154,7 +154,7 @@ export default function RoleBasicInformation() {
                   ref={assignmentApproaches}
                 />
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} marginTop={5}>
                 <Typography variant={"h5"} component={"label"}>
                   Version:
                 </Typography>

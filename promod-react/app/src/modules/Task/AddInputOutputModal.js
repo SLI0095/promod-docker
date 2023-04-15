@@ -157,6 +157,7 @@ export default function AddInputOutputModal(props) {
                     <Button
                       onClick={handleClose}
                       variant="contained"
+                      color="error"
                       sx={{ marginRight: 1 }}
                     >
                       Close

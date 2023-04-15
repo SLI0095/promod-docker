@@ -96,6 +96,7 @@ export default function CreateGroupModal() {
                     <Button
                       onClick={handleClose}
                       variant="contained"
+                      color="error"
                       sx={{ marginRight: 1 }}
                     >
                       Cancel

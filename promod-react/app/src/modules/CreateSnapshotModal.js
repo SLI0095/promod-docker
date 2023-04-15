@@ -176,6 +176,7 @@ export default function CreateSnapshotModal(props) {
                   <Button
                     onClick={handleClose}
                     variant="contained"
+                    color="error"
                     sx={{ marginLeft: 1 }}
                   >
                     Cancel

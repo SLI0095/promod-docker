@@ -240,7 +240,7 @@ export default function NewProcess() {
             <Grid item xs={12}>
               <ReactQuill theme="snow" ref={keyConsiderations} />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} marginTop={5}>
               <Typography variant={"h5"} component={"label"}>
                 Version:
               </Typography>

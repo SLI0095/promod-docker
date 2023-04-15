@@ -162,6 +162,7 @@ export default function AddTaskSettingsModal(props) {
                       onClick={handleClose}
                       variant="contained"
                       sx={{ marginLeft: 1 }}
+                      color="error"
                     >
                       Close
                     </Button>

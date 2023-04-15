@@ -107,6 +107,7 @@ export default function CreateProjectModal() {
                     <Button
                       onClick={handleClose}
                       variant="contained"
+                      color="error"
                       sx={{ marginRight: 1 }}
                     >
                       Close
