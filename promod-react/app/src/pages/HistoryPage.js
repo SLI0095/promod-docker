@@ -254,7 +254,7 @@ export default function HistoryPage(props) {
               aria-controls="panel1a-content"
               id="panel1a-header"
             >
-              <Typography sx={{ width: "80%" }}>{snap.name}</Typography>
+              <Typography sx={{ width: "80%" }}>{snap.snapshotName}</Typography>
               <Typography sx={{ color: "text.secondary" }}>
                 {snap.snapshotDate}
               </Typography>

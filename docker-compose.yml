@@ -7,7 +7,7 @@ services:
             - MYSQL_USER=${DB_USER}
             - MYSQL_PASSWORD=${DB_PASSWORD}
             - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-            - MYSQL_DATABASE=${DB_NAME}
+            - MYSQL_DATABASE=promod
         volumes:
             - ./promod-mysql/:/docker-entrypoint-initdb.d/:ro
         healthcheck:
@@ -26,7 +26,7 @@ services:
             promod-mysql:
                condition: service_healthy
         environment:
-            - SPRING_DATASOURCE_URL=jdbc:mysql://promod-mysql:3306/${DB_NAME}?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Prague
+            - SPRING_DATASOURCE_URL=jdbc:mysql://promod-mysql:3306/promod?allowPublicKeyRetrieval=true&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Europe/Prague
             - SPRING_DATASOURCE_USERNAME=${DB_USER}
             - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
             - PROMOD_CORS_ALLOWED-ORIGINS=http://localhost:${WEB_APP_EXPOSE_PORT}/

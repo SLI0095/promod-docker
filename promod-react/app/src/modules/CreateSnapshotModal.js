@@ -26,6 +26,7 @@ export default function CreateSnapshotModal(props) {
   const [open, setOpen] = React.useState(false);
   const userId = sessionStorage.getItem("userId");
   let navigate = useNavigate();
+  const snapshotName = useRef();
   const snapshotDescription = useRef();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -34,10 +35,14 @@ export default function CreateSnapshotModal(props) {
   };
   const handleClose = () => setOpen(false);
   const createSnapshot = (event) => {
+    const snapshotDetail = {
+      snapshotName: snapshotName.current.value,
+      snapshotDescription: snapshotDescription.current.value,
+    };
     const requestOptions = {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: snapshotDescription.current.value,
+      body: JSON.stringify(snapshotDetail),
     };
     if (props.type === "process") {
       fetch(
@@ -154,6 +159,15 @@ export default function CreateSnapshotModal(props) {
                   <Typography variant="h6" component="h2">
                     Creating new snapshot:
                   </Typography>
+                </Grid>
+                <Grid textAlign={"center"} item xs={12}>
+                  <TextField
+                    margin={"normal"}
+                    fullWidth
+                    required
+                    inputRef={snapshotName}
+                    label="Snapshot name"
+                  />
                 </Grid>
                 <Grid textAlign={"center"} item xs={12}>
                   <TextField
