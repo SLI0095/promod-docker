@@ -63,62 +63,70 @@ export default function StartPage() {
             ProMod - Process Modeling Tool
           </Typography>
         </Box>
-        <form onSubmit={login}>
-          <Grid container spacing={1}>
-            <Grid
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              xs={12}
+        <Grid container spacing={1}>
+          <Grid
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            xs={12}
+          >
+            <form id="login" onSubmit={login}>
+              <Grid
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                xs={12}
+              >
+                <Box>
+                  <Typography variant="h5" component={"h4"}>
+                    Please, log in:
+                  </Typography>
+                </Box>
+              </Grid>
+              <Grid textAlign={"center"} item xs={12}>
+                <TextField
+                  margin={"normal"}
+                  required
+                  inputRef={username}
+                  label="Username"
+                />
+              </Grid>
+              <Grid textAlign={"center"} item xs={12}>
+                <TextField
+                  margin={"normal"}
+                  required
+                  inputRef={password}
+                  label="Password"
+                  type="password"
+                />
+              </Grid>
+            </form>
+          </Grid>
+          <Grid
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            xs={12}
+          >
+            <Box
+              sx={{
+                marginTop: 2,
+              }}
             >
-              <Box>
-                <Typography variant="h5" component={"h4"}>
-                  Please, log in:
-                </Typography>
-              </Box>
-            </Grid>
-            <Grid textAlign={"center"} item xs={12}>
-              <TextField
-                margin={"normal"}
-                required
-                inputRef={username}
-                label="Username"
-              />
-            </Grid>
-            <Grid textAlign={"center"} item xs={12}>
-              <TextField
-                margin={"normal"}
-                required
-                inputRef={password}
-                label="Password"
-                type="password"
-              />
-            </Grid>
-            <Grid
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              xs={12}
-            >
-              <Box
+              <Button
+                type={"submit"}
+                form="login"
+                variant="contained"
                 sx={{
-                  marginTop: 2,
+                  marginRight: 2,
                 }}
               >
-                <Button
-                  type={"submit"}
-                  variant="contained"
-                  sx={{
-                    marginRight: 2,
-                  }}
-                >
-                  Log in
-                </Button>
-                <RegisterModal />
-              </Box>
-            </Grid>
+                Log in
+              </Button>
+              <RegisterModal />
+            </Box>
           </Grid>
-        </form>
+        </Grid>
       </Container>
     </>
   );

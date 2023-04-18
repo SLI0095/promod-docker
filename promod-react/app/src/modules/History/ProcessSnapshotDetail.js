@@ -59,7 +59,11 @@ export function ProcessSnapshotDetail(props) {
                   <Grid textAlign={"center"} item xs={12}>
                     <div style={divStyle}>
                       <ReactBpmn
-                        diagramXML={props.process.workflow.bpmnContent}
+                        diagramXML={
+                          props.process.workflow == undefined
+                            ? null
+                            : props.process.workflow.bpmnContent
+                        }
                       />
                     </div>
                   </Grid>

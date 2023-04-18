@@ -30,9 +30,9 @@ export default function RegisterModal() {
   const passwordAgain = useRef();
 
   function registerUser(event) {
+    event.preventDefault();
     if (password.current.value !== passwordAgain.current.value) {
       enqueueSnackbar("Passwords not match!", { variant: "error" });
-      event.preventDefault();
       return;
     }
     let currentUsername = username.current.value;
@@ -51,10 +51,10 @@ export default function RegisterModal() {
     ) {
       if (response.status === 200) {
         enqueueSnackbar("User registered!", { variant: "success" });
+        handleClose();
       }
       if (response.status === 400) {
         enqueueSnackbar("User already exists!", { variant: "error" });
-        event.preventDefault();
       }
     });
   }
@@ -71,7 +71,7 @@ export default function RegisterModal() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <form onSubmit={registerUser}>
+          <form id={"register"} onSubmit={registerUser}>
             <Box sx={style}>
               <Grid container spacing={1}>
                 <Grid textAlign={"center"} item xs={12}>
@@ -119,6 +119,7 @@ export default function RegisterModal() {
                     <Button
                       type="submit"
                       variant="contained"
+                      form={"register"}
                       sx={{
                         marginRight: 2,
                       }}
@@ -126,13 +127,13 @@ export default function RegisterModal() {
                       Register
                     </Button>
                     <Button
-                    onClick={handleClose}
-                    variant="contained"
-                    color="error"
-                    sx={{ marginLeft: 1 }}
-                  >
-                    Cancel
-                  </Button>
+                      onClick={handleClose}
+                      variant="contained"
+                      color="error"
+                      sx={{ marginLeft: 1 }}
+                    >
+                      Cancel
+                    </Button>
                   </Box>
                 </Grid>
               </Grid>

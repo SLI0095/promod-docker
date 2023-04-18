@@ -73,6 +73,7 @@ export default function PaperElement(props) {
             }}
           >
             <Typography
+              noWrap
               variant={"h6"}
               component={"h3"}
               sx={{
@@ -84,16 +85,19 @@ export default function PaperElement(props) {
             </Typography>
             <PaperElementMenu type={props.type} element={props.element} />
           </Box>
-          <Typography
-            variant={"body1"}
-            component={"p"}
-            sx={{
-              paddingX: 2,
-              paddingBottom: 2,
-            }}
-          >
-            {props.element.briefDescription}
-          </Typography>
+          <Box height={70}>
+            <Typography
+              noWrap
+              variant={"body1"}
+              component={"p"}
+              sx={{
+                paddingX: 2,
+                paddingBottom: 2,
+              }}
+            >
+              {props.element.briefDescription}
+            </Typography>
+          </Box>
         </Paper>
       </Grid>
     </>
