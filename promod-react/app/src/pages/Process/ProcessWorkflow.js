@@ -16,7 +16,7 @@ import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import MenuItem from "@mui/material/MenuItem";
 import * as React from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import config from "../../config.json";
 import { useSnackbar } from "notistack";
 
@@ -49,6 +49,7 @@ export default function ProcessWorkflow() {
   const userId = sessionStorage.getItem("userId");
   const projectId = sessionStorage.getItem("projectId");
   const { enqueueSnackbar } = useSnackbar();
+  let navigate = useNavigate();
 
   function getElement(id) {
     var result;
@@ -204,7 +205,6 @@ export default function ProcessWorkflow() {
       let task_process = getElement(
         selectedElement.current.getElementsByTagName("input")[0].value
       );
-      //console.log(task_process);
       const element = elementRegistry.get(shapeElement.current);
       if (task_process.steps === undefined) {
         modeling.updateProperties(element, { name: task_process.name });
@@ -285,7 +285,6 @@ export default function ProcessWorkflow() {
     let xml;
     modeler.current.saveXML().then((result) => {
       xml = result.xml;
-      //console.log(xml);
       const bpmn = {
         bpmnContent: xml,
         process: {
@@ -307,8 +306,8 @@ export default function ProcessWorkflow() {
       )
         .then((response) => {
           if (response.ok) {
+            navigate(0);
             enqueueSnackbar("Changes saved.", { variant: "success" });
-            //setReload(true);
             return;
           }
           return response.json();
