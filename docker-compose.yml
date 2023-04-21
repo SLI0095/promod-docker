@@ -10,6 +10,7 @@ services:
             - MYSQL_DATABASE=promod
         volumes:
             - ./promod-mysql/:/docker-entrypoint-initdb.d/:ro
+            - ${DB_DATA_FOLDER}:/var/lib/mysql
         healthcheck:
             test: ["CMD-SHELL", 'mysqladmin ping']
             interval: 10s
