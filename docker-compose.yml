@@ -9,7 +9,7 @@ services:
             - MYSQL_ALLOW_EMPTY_PASSWORD=yes
             - MYSQL_DATABASE=promod
         volumes:
-            - ./promod-mysql/:/docker-entrypoint-initdb.d/:ro
+            - ./promod-mysql/${SQL_FILE}:/docker-entrypoint-initdb.d/init.sql:ro
             - ${DB_DATA_FOLDER}:/var/lib/mysql
         healthcheck:
             test: ["CMD-SHELL", 'mysqladmin ping']
